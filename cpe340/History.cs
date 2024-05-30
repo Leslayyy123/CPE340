@@ -97,11 +97,16 @@ namespace oop_project
                     {
                         for (int i = dgvItems.Rows.Count - 1; i >= 0; i--)
                         {
-                            string statusrow = dgvItems.Rows[i].Cells["Status"].Value.ToString();
+                            DataGridViewCell statusCell = dgvItems.Rows[i].Cells[""];
 
-                            if (statusrow != $"{status}") ;
+                            if (statusCell != null && statusCell.Value != null)
                             {
-                                dgvItems.Rows.RemoveAt(i);
+                                string statusrow = statusCell.Value.ToString();
+
+                                if (statusrow != $"{status}")
+                                {
+                                    dgvItems.Rows.RemoveAt(i);
+                                }
                             }
                         }
                     }
@@ -126,11 +131,16 @@ namespace oop_project
                     {
                         for (int i = dgvItems.Rows.Count - 1; i >= 0; i--)
                         {
-                            string statusrow = dgvItems.Rows[i].Cells["Status"].Value.ToString();
+                            DataGridViewCell statusCell = dgvItems.Rows[i].Cells["Status"];
 
-                            if (statusrow != $"{status}") ;
+                            if (statusCell != null && statusCell.Value != null)
                             {
-                                dgvItems.Rows.RemoveAt(i);
+                                string statusrow = statusCell.Value.ToString();
+
+                                if (statusrow != $"{status}")
+                                {
+                                    dgvItems.Rows.RemoveAt(i);
+                                }
                             }
                         }
                     }
