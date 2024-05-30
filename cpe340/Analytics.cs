@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.OleDb;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,16 +13,19 @@ using System.Windows.Forms;
 
 namespace oop_project
 {
-
-    public partial class History : Form
+    public partial class Analytics : Form
     {
         private OleDbConnection connection;
         private OleDbDataAdapter dataAdapter;
         private DataTable dataTable;
-        public History()
+        public Analytics()
         {
             InitializeComponent();
             InitializeDatabaseConnection();
+        }
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
 
         }
         private void InitializeDatabaseConnection()
@@ -39,17 +43,14 @@ namespace oop_project
                 MessageBox.Show("Error initializing database connection: " + ex.Message);
             }
         }
+       
         private void LoadDataIntoDataGridView()
         {
             try
             {
                 string query = "SELECT * FROM HistoryItems";
 
-                if (cbxStatus.SelectedItem != null && cbxStatus.SelectedItem.ToString() != "Search by Status")
-                {
-                    string status = cbxStatus.SelectedItem.ToString();
-                    query += $" WHERE Status = '{status}'";
-                }
+
 
                 dataAdapter = new OleDbDataAdapter(query, connection);
                 dataTable = new DataTable();
@@ -73,40 +74,6 @@ namespace oop_project
             {
                 MessageBox.Show("Error loading data: " + ex.Message);
             }
-        }
-
-
-
-        private void OpenChildFormInPanel()
-        {
-            Analytics childForm = new Analytics();
-            childForm.TopLevel = false;
-            panelAnalytics.Controls.Add(childForm);
-            childForm.Dock = DockStyle.Fill;
-            childForm.Show();
-        }
-        private void tbxSearch_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void History_Load(object sender, EventArgs e)
-        {
-            LoadDataIntoDataGridView();
-        }
-
-        private void btnBack_Click(object sender, EventArgs e)
-        {
-            Admin admin = Application.OpenForms.OfType<Admin>().FirstOrDefault();
-            if (admin != null)
-            {
-                admin.Close();
-            }
-
-            Main main = new Main();
-            main.Show();
-
-            this.Close();
         }
         private bool isPhotoFormOpen = false;
         private void ShowPhotoPopup(byte[] photoBytes)
@@ -156,80 +123,72 @@ namespace oop_project
             }
         }
 
-        private void guna2Button1_Click(object sender, EventArgs e)
-        {
-            dgvItems.Visible = false;
-            txtSearch.Visible = false;
-            panelAnalytics.Visible = true;
-            dgvItems.Visible = false;
-            cbxStatus.Visible = false;
-            btnAnalytics.Visible = false;
-            lblHis.Visible = false;
-            lblStat.Visible = false;
-            OpenChildFormInPanel();
-        }
-
         private void cbxMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
-            LoadDataIntoDataGridView();
-            try
+            if (cbxMonth.SelectedIndex > -1)
             {
-                if (cbxStatus.SelectedIndex != null)
-                {
-                    string status = cbxStatus.Text;
-                    {
-                        for (int i = dgvItems.Rows.Count - 1; i >= 0; i--)
-                        {
-                            DataGridViewCell statusCell = dgvItems.Rows[i].Cells["Status"];
-
-                            if (statusCell != null && statusCell.Value != null)
-                            {
-                                string statusrow = statusCell.Value.ToString();
-
-                                if (statusrow != $"{status}")
-                                {
-                                    dgvItems.Rows.RemoveAt(i);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            catch
-            {
-                MessageBox.Show("Error!!!!");
+                string selectedMonth = cbxMonth.SelectedItem.ToString();
+                LoadDataBySelectedMonth(selectedMonth);
+                CountItemsByStatus(selectedMonth);
             }
         }
 
-        private void txtSearch_TextChanged(object sender, EventArgs e)
+        private void LoadDataBySelectedMonth(string selectedMonth)
         {
-            string searchText = txtSearch.Text.Trim();
-
-            if (cbxStatus.SelectedItem != null)
+            try
             {
-                string status = cbxStatus.SelectedItem.ToString();
-                DataView dataView = dataTable.DefaultView;
-
-                // Check if the DataTable contains the column "Description"
-                if (dataTable.Columns.Contains("ItemDescription"))
+                if (selectedMonth == "Search by Month")
                 {
-                    // Filter based on status and search text
-                    dataView.RowFilter = $"Status = '{status}' AND (ItemName LIKE '%{searchText}%' OR ItemDescription LIKE '%{searchText}%' OR ItemType LIKE '%{searchText}%' OR LocationFound LIKE '%{searchText}%' OR LocationLost LIKE '%{searchText}%')";
+                    dataTable.DefaultView.RowFilter = string.Empty;
+                    dgvItems.DataSource = dataTable;
                 }
                 else
                 {
-                    // Filter based on status only (without Description)
-                    dataView.RowFilter = $"Status = '{status}'";
+                    string query = $"SELECT * FROM FoundItem WHERE Format(DateFound, 'mmmm') = '{selectedMonth}'";
+                    dataAdapter = new OleDbDataAdapter(query, connection);
+                    dataTable = new DataTable();
+                    dataAdapter.Fill(dataTable);
+                    dgvItems.DataSource = dataTable;
+                    dgvItems.Columns.Remove("Photo");
                 }
-
-                // Rebind the DataGridView to the filtered DataView
-                dgvItems.DataSource = dataView.ToTable();
             }
-            else
+            catch (Exception ex)
             {
-                // No status selected, filter based on search text only
-                (dgvItems.DataSource as DataTable).DefaultView.RowFilter = $"ItemName LIKE '%{searchText}%'";
+                MessageBox.Show("Error loading data: " + ex.Message);
             }
         }
-    }
+        // Helper method to get the month number based on its name
+        private int GetMonthNumber(string monthName)
+        {
+            return DateTime.ParseExact(monthName, "MMMM", CultureInfo.CurrentCulture).Month;
+        }
+
+        private void guna2HtmlLabel2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void CountItemsByStatus(string selectedMonth)
+        {
+            try
+            {
+                int totalItems = dataTable.Rows.Count;
+                lblTotal.Text = $"{totalItems}";
+
+                int unclaimedCount = dataTable.AsEnumerable().Count(row => row["Status"].ToString() == "UNCLAIMED");
+                int approvedCount = dataTable.AsEnumerable().Count(row => row["Status"].ToString() == "APPROVED");
+                int deniedCount = dataTable.AsEnumerable().Count(row => row["Status"].ToString() == "DENIED");
+                int pendingCount = dataTable.AsEnumerable().Count(row => row["Status"].ToString() == "PENDING");
+
+                pbUnclaimed.Value = (int)Math.Round((double)unclaimedCount / totalItems * 100);
+                pbApproved.Value = (int)Math.Round((double)approvedCount / totalItems * 100);
+                pbDenied.Value = (int)Math.Round((double)deniedCount / totalItems * 100);
+                pbPending.Value = (int)Math.Round((double)pendingCount / totalItems * 100);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error counting items: " + ex.Message);
+            }
+        }
+        }
 }

@@ -196,6 +196,7 @@
             dtpFound.Name = "dtpFound";
             dtpFound.Size = new Size(332, 27);
             dtpFound.TabIndex = 16;
+            dtpFound.ValueChanged += dtpFound_ValueChanged;
             // 
             // btnClear
             // 
@@ -303,7 +304,7 @@
             label9.TabIndex = 67;
             label9.Text = "Supports: JPG, PNG";
             // 
-            // ReportItem
+            // ReportFoundItem
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
@@ -332,7 +333,7 @@
             Controls.Add(label1);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
-            Name = "ReportItem";
+            Name = "ReportFoundItem";
             Text = "ReportItem";
             Load += ReportItem_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();

@@ -28,12 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
             dgvRequest = new DataGridView();
             btnAccept = new Button();
             btnDeny = new Button();
             btnBack = new Button();
-            btnStudent = new Button();
             tbxSearch = new TextBox();
             dtpRequest = new DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)dgvRequest).BeginInit();
@@ -45,20 +44,20 @@
             dgvRequest.BackgroundColor = Color.MistyRose;
             dgvRequest.BorderStyle = BorderStyle.None;
             dgvRequest.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = Color.White;
-            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
-            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
-            dgvRequest.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = Color.White;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.False;
+            dgvRequest.DefaultCellStyle = dataGridViewCellStyle1;
             dgvRequest.GridColor = Color.Black;
-            dgvRequest.Location = new Point(297, 102);
+            dgvRequest.Location = new Point(29, 102);
             dgvRequest.Name = "dgvRequest";
             dgvRequest.ReadOnly = true;
             dgvRequest.RowHeadersWidth = 51;
-            dgvRequest.Size = new Size(1286, 493);
+            dgvRequest.Size = new Size(1554, 499);
             dgvRequest.TabIndex = 0;
             dgvRequest.CellContentClick += dgvRequest_CellContentClick;
             // 
@@ -104,19 +103,6 @@
             btnBack.UseVisualStyleBackColor = true;
             btnBack.Click += btnBack_Click;
             // 
-            // btnStudent
-            // 
-            btnStudent.BackColor = Color.Maroon;
-            btnStudent.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnStudent.ForeColor = Color.White;
-            btnStudent.Location = new Point(29, 308);
-            btnStudent.Name = "btnStudent";
-            btnStudent.Size = new Size(236, 65);
-            btnStudent.TabIndex = 42;
-            btnStudent.Text = "STUDENT";
-            btnStudent.UseVisualStyleBackColor = false;
-            btnStudent.Click += btnStudent_Click;
-            // 
             // tbxSearch
             // 
             tbxSearch.BackColor = Color.Maroon;
@@ -149,7 +135,6 @@
             ClientSize = new Size(1636, 746);
             Controls.Add(dtpRequest);
             Controls.Add(tbxSearch);
-            Controls.Add(btnStudent);
             Controls.Add(btnBack);
             Controls.Add(btnDeny);
             Controls.Add(btnAccept);
@@ -169,7 +154,6 @@
         private Button btnAccept;
         private Button btnDeny;
         private Button btnBack;
-        private Button btnStudent;
         private TextBox tbxSearch;
         private DateTimePicker dtpRequest;
     }

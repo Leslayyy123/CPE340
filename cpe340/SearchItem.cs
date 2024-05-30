@@ -71,7 +71,7 @@ namespace oop_project
                 {
                     whereClause.Append("WHERE ");
                 }
-                whereClause.Append("(Status <> 'CLAIMED')");
+                whereClause.Append("(Status <> 'APPROVED')");
 
                 string query = $"SELECT ItemName, ItemDescription, ItemType, LocationFound FROM FoundItem {whereClause}";
                         

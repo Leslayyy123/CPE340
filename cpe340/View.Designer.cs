@@ -79,12 +79,12 @@
             // 
             // cbxMonth
             // 
-            cbxMonth.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cbxMonth.Font = new Font("Lucida Sans Unicode", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             cbxMonth.FormattingEnabled = true;
             cbxMonth.Items.AddRange(new object[] { "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY ", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER ", "NOVEMBER", "DECEMBER" });
             cbxMonth.Location = new Point(45, 101);
             cbxMonth.Name = "cbxMonth";
-            cbxMonth.Size = new Size(236, 36);
+            cbxMonth.Size = new Size(236, 31);
             cbxMonth.TabIndex = 71;
             cbxMonth.Text = "Search by Month";
             cbxMonth.SelectedIndexChanged += cbxMonth_SelectedIndexChanged;

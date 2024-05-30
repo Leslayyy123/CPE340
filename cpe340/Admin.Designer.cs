@@ -74,7 +74,7 @@
             btnView.ImageAlign = ContentAlignment.MiddleLeft;
             btnView.Location = new Point(0, 0);
             btnView.Name = "btnView";
-            btnView.Padding = new Padding(200, 0, 0, 0);
+            btnView.Padding = new Padding(130, 0, 0, 0);
             btnView.Size = new Size(552, 78);
             btnView.TabIndex = 20;
             btnView.Text = "        VIEW UNCLAIMED ITEMS";
@@ -156,9 +156,9 @@
             // 
             AdminPanel.BackColor = Color.Transparent;
             AdminPanel.Dock = DockStyle.Bottom;
-            AdminPanel.Location = new Point(0, 309);
+            AdminPanel.Location = new Point(0, 299);
             AdminPanel.Name = "AdminPanel";
-            AdminPanel.Size = new Size(1636, 746);
+            AdminPanel.Size = new Size(1636, 756);
             AdminPanel.TabIndex = 22;
             // 
             // Admin

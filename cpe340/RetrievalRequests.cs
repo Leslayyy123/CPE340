@@ -23,7 +23,7 @@ namespace oop_project
         {
             InitializeComponent();
             InitializeDatabaseConnection();
-            
+            LoadDataIntoDataGridView();
         }
 
         private void InitializeDatabaseConnection()
@@ -128,7 +128,7 @@ namespace oop_project
             {
                 string itemName = dgvRequest.SelectedRows[0].Cells["ItemName"].Value.ToString();
 
-                UpdateLostItemStatus(itemName, "CLAIMED");
+                UpdateLostItemStatus(itemName, "APPROVED");
 
                 if (DeleteAcceptedRequestFromRetrievalRequests(itemName))
                 {
@@ -136,7 +136,7 @@ namespace oop_project
 
                     LoadDataIntoDataGridView();
 
-                    UpdateStatusInViewForm(itemName, "CLAIMED");
+                    UpdateStatusInViewForm(itemName, "APPROVED");
                 }
                 else
                 {
@@ -198,28 +198,7 @@ namespace oop_project
             }
         }
 
-        private bool DeleteRequestFromRetrievalRequests(string itemName)
-        {
-            try
-            {
-                connection.Open();
 
-                string deleteQuery = "DELETE FROM LostItem WHERE ItemName = @ItemName";
-                OleDbCommand deleteCommand = new OleDbCommand(deleteQuery, connection);
-                deleteCommand.Parameters.AddWithValue("@ItemName", itemName);
-
-                int rowsAffected = deleteCommand.ExecuteNonQuery();
-
-                connection.Close();
-
-                return rowsAffected > 0;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error deleting request from  RequestRetrieval table: " + ex.Message);
-                return false;
-            }
-        }
 
         private bool isPhotoFormOpen = false;
         public void AddtoHistory()
@@ -320,27 +299,6 @@ namespace oop_project
 
             isPhotoFormOpen = true;
         }
-
-        private Button currentButton;
-
-        private void ChangeButtonColor(Button clickedButton)
-        {
-            if (currentButton != null)
-            {
-                currentButton.BackColor = Color.Maroon;
-            }
-
-            clickedButton.BackColor = Color.Goldenrod;
-
-            currentButton = clickedButton;
-        }
-
-        private void btnStudent_Click(object sender, EventArgs e)
-        {
-            ChangeButtonColor(btnStudent);
-            LoadDataIntoDataGridView();
-        }
-
         private void ApplyFilter()
         {
             try
@@ -352,12 +310,14 @@ namespace oop_project
                         string keyword = tbxSearch.Text.Trim(); 
 
                         dataTable.DefaultView.RowFilter =
-                            $"ItemName.ToLower() LIKE '%{keyword}%' OR " +
-                            $"LocationFound.ToLower() LIKE '%{keyword}%' OR " +
-                            $"FoundBy.ToLower() LIKE '%{keyword}%' OR " +
-                            $"ItemDescription.ToLower() LIKE '%{keyword}%' OR " +
-                            $"ItemType.ToLower() LIKE '%{keyword}%' OR " +
-                            $"Status.ToLower() LIKE '%{keyword}%'";
+                            $"ItemName LIKE '%{keyword}%' OR " +
+                            $"LocationLost  LIKE '%{keyword}%' OR " +
+                            $"Course LIKE '%{keyword}%' OR " +
+                            $"StudentName LIKE '%{keyword}%' OR " +
+                             $"YearLevel LIKE '%{keyword}%' OR " +
+                            $"ItemDescription LIKE '%{keyword}%' OR " +
+                            $"ItemType LIKE '%{keyword}%' OR " +
+                            $"Status LIKE '%{keyword}%'";
                     }
                     else
                     {

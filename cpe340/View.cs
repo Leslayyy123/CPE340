@@ -44,7 +44,7 @@ namespace oop_project
             try
             {
                 string query = "SELECT * FROM FoundItem WHERE Status = 'UNCLAIMED'";
-
+    
                 dataAdapter = new OleDbDataAdapter(query, connection);
                 dataTable = new DataTable();
                 dataAdapter.Fill(dataTable);
@@ -53,15 +53,17 @@ namespace oop_project
 
                 dgvItems.DataSource = dataTable;
 
-                if (dgvItems.Columns.Contains("btnShowPhoto"))
-                {
-                    dgvItems.Columns.Remove("btnShowPhoto");
-                }
 
                 if (dgvItems.Columns.Contains("Photo"))
                 {
                     dgvItems.Columns.Remove("Photo");
                 }
+
+                if (dgvItems.Columns.Contains("btnShowPhoto"))
+                {
+                    dgvItems.Columns.Remove("btnShowPhoto");
+                }
+
 
                 DataGridViewButtonColumn showPhotoButtonColumn = new DataGridViewButtonColumn();
                 showPhotoButtonColumn.HeaderText = "Photo";
@@ -120,7 +122,7 @@ namespace oop_project
 
                 if (currentStatus == "UNCLAIMED")
                 {
-                    row["Status"] = "CLAIMED";
+                    row["Status"] = "APPROVED";
 
 
                     OleDbCommandBuilder builder = new OleDbCommandBuilder(dataAdapter);
@@ -256,12 +258,15 @@ namespace oop_project
                 }
                 else
                 {
-                    string query = $"SELECT * FROM FoundItem WHERE Format(DateFound, 'mmmm') = '{selectedMonth}', Status = 'UNCLAIMED'";
+                    string query = $"SELECT * FROM FoundItem WHERE Format(DateFound, 'mmmm') = '{selectedMonth}' AND Status = 'UNCLAIMED'";
                     dataAdapter = new OleDbDataAdapter(query, connection);
                     dataTable = new DataTable();
                     dataAdapter.Fill(dataTable);
                     dgvItems.DataSource = dataTable;
-                    dgvItems.Columns.Remove("Photo");
+                    if (dgvItems.Columns.Contains("Photo"))
+                    {
+                        dgvItems.Columns.Remove("Photo");
+                    }
                 }
             }
             catch (Exception ex)
@@ -273,7 +278,7 @@ namespace oop_project
 
         private void cbxMonth_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cbxMonth.SelectedIndex > 0)
+            if (cbxMonth.SelectedIndex > -1)
             {
                 string selectedMonth = cbxMonth.SelectedItem.ToString();
                 LoadDataBySelectedMonth(selectedMonth);

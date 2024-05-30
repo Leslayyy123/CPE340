@@ -31,7 +31,7 @@
         private void ReportItem_Load(object sender, EventArgs e)
         {
             try
-            {   
+            {
                 string queryGetStudentName = "SELECT StudentName FROM StudentInfo WHERE StudentID = @studentID";
                 cmd = new OleDbCommand(queryGetStudentName, myConn);
 
@@ -107,7 +107,7 @@
         {
             string studName, itemName, itemType, itemDescription, dateFound, location;
             byte[] imageBytes = null;
-            string studentID = StudID; 
+            string studentID = StudID;
 
             studName = tbxName.Text;
             itemName = tbxItemName.Text;
@@ -116,56 +116,56 @@
             itemType = cbxType.SelectedItem?.ToString();
             dateFound = dtpFound.Value.ToString("dd/MM/yyyy");
 
-        
-                try
-                {
+
+            try
+            {
                 if (string.IsNullOrWhiteSpace(studName) || string.IsNullOrWhiteSpace(itemName) ||
-               string.IsNullOrWhiteSpace(itemDescription) || string.IsNullOrWhiteSpace(location) || string.IsNullOrWhiteSpace(itemType))
+               string.IsNullOrWhiteSpace(itemDescription) || string.IsNullOrWhiteSpace(location) || string.IsNullOrWhiteSpace(itemType) || string.IsNullOrEmpty(pictureBox1.ImageLocation))
                 {
                     throw new Exception("Please fill in all required fields.");
                 }
 
                 string queryGetStudentID = "SELECT StudentID FROM StudentInfo WHERE StudentName = @studName";
-                    cmd = new OleDbCommand(queryGetStudentID, myConn);
-                    cmd.Parameters.AddWithValue("@studName", studName);
-                    myConn.Open();
-                    var result = cmd.ExecuteScalar();
-                    if (result != null)
-                    {
-                        studentID = result.ToString();
-                    }
-                    else
-                    {
-                        throw new Exception("Student not found.");
-                    }
+                cmd = new OleDbCommand(queryGetStudentID, myConn);
+                cmd.Parameters.AddWithValue("@studName", studName);
+                myConn.Open();
+                var result = cmd.ExecuteScalar();
+                if (result != null)
+                {
+                    studentID = result.ToString();
+                }
+                else
+                {
+                    throw new Exception("Student not found.");
+                }
 
-                    if (!string.IsNullOrEmpty(pictureBox1.ImageLocation))
-                    {
-                        Image img = Image.FromFile(pictureBox1.ImageLocation);
-                        ImageConverter converter = new ImageConverter();
-                        imageBytes = (byte[])converter.ConvertTo(img, typeof(byte[]));
-                    }
+                if (!string.IsNullOrEmpty(pictureBox1.ImageLocation))
+                {
+                    Image img = Image.FromFile(pictureBox1.ImageLocation);
+                    ImageConverter converter = new ImageConverter();
+                    imageBytes = (byte[])converter.ConvertTo(img, typeof(byte[]));
+                }
 
-                    string query = "INSERT INTO FoundItem (StudentID, FoundBy, ItemName, ItemDescription, ItemType, DateFound, LocationFound, Status, Photo) " +
-                        "VALUES (@studentID, @foundBy, @itemName, @description, @type, @date, @loc, @status, @photo)";
-                    cmd = new OleDbCommand(query, myConn);
-                    cmd.Parameters.AddWithValue("@studentID", studentID); 
-                    cmd.Parameters.AddWithValue("@foundBy", studName);
-                    cmd.Parameters.AddWithValue("@itemName", itemName);
-                    cmd.Parameters.AddWithValue("@description", itemDescription);
-                    cmd.Parameters.AddWithValue("@type", itemType);
-                    cmd.Parameters.AddWithValue("@date", dateFound);
-                    cmd.Parameters.AddWithValue("@loc", location);
-                    cmd.Parameters.AddWithValue("@status", "UNCLAIMED");
-                    cmd.Parameters.AddWithValue("@photo", imageBytes);
+                string query = "INSERT INTO FoundItem (StudentID, FoundBy, ItemName, ItemDescription, ItemType, DateFound, LocationFound, Status, Photo) " +
+                    "VALUES (@studentID, @foundBy, @itemName, @description, @type, @date, @loc, @status, @photo)";
+                cmd = new OleDbCommand(query, myConn);
+                cmd.Parameters.AddWithValue("@studentID", studentID);
+                cmd.Parameters.AddWithValue("@foundBy", studName);
+                cmd.Parameters.AddWithValue("@itemName", itemName);
+                cmd.Parameters.AddWithValue("@description", itemDescription);
+                cmd.Parameters.AddWithValue("@type", itemType);
+                cmd.Parameters.AddWithValue("@date", dateFound);
+                cmd.Parameters.AddWithValue("@loc", location);
+                cmd.Parameters.AddWithValue("@status", "UNCLAIMED");
+                cmd.Parameters.AddWithValue("@photo", imageBytes);
 
-                    cmd.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
 
-                    da.SelectCommand = new OleDbCommand("SELECT * FROM FoundItem", myConn);
+                da.SelectCommand = new OleDbCommand("SELECT * FROM FoundItem", myConn);
 
-                    if (ds.Tables["FoundItem"] != null)
-                        ds.Tables["FoundItem"].Clear();
-                    da.Fill(ds, "FoundItem");
+                if (ds.Tables["FoundItem"] != null)
+                    ds.Tables["FoundItem"].Clear();
+                da.Fill(ds, "FoundItem");
 
 
                 MessageBox.Show("Submitted Successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -173,23 +173,23 @@
                 ShowDialogBox();
 
             }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                     myConn.Close();
-                     AddtoHistory(studName,  itemName,  studentID,  itemDescription,  itemType,  dateFound,  location,  imageBytes);
-                }       
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                myConn.Close();
+                AddtoHistory(studName, itemName, studentID, itemDescription, itemType, dateFound, location, imageBytes);
+            }
         }
-        public void AddtoHistory(string studName, string itemName,string studentID, string itemDesc,string itemType, string dateFound,string location, byte[] imageBytes)
+        public void AddtoHistory(string studName, string itemName, string studentID, string itemDesc, string itemType, string dateFound, string location, byte[] imageBytes)
         {
             try
             {
-                
 
-                
+
+
                 using (OleDbConnection myConn = new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\\Users\\Leslie\\OneDrive - Cebu Institute of Technology University\\Desktop\\Database2.mdb"))
                 {
                     myConn.Open();
@@ -211,7 +211,7 @@
                     myConn.Close();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show($"Error! {ex.Message}");
             }
@@ -244,6 +244,18 @@
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void dtpFound_ValueChanged(object sender, EventArgs e)
+        {
+            DateTime selectedDate = dtpFound.Value.Date;
+            DateTime today = DateTime.Today;
+
+            if (selectedDate > today)
+            {
+                MessageBox.Show("The date found cannot be in the future. Please select a valid date.", "Invalid Date", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                dtpFound.Value = today;
+            }
         }
     }
 }
